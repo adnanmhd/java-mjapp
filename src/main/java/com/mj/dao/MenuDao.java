@@ -10,5 +10,11 @@ public interface MenuDao {
 
 	public void closeStatement() throws Exception;
 
-	public List<MenuEntity> getAllMenu() throws Exception;
+	public List<MenuEntity> getMenu(String query) throws Exception;
+	
+	public Boolean addMenu(MenuEntity entity) throws Exception;
+	
+	public Boolean updateMenu(MenuEntity entity) throws Exception;
+	
+	public Boolean deleteMenu(MenuEntity entity) throws Exception;
 }
