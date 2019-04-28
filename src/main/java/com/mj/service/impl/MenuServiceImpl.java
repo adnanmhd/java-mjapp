@@ -98,7 +98,7 @@ public class MenuServiceImpl extends DbConnection implements MenuService {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			ResponseEntity.setException(e.getMessage());
+			ResponseEntity.setMessage(e.getMessage());
 		} finally {
 			this.conn.close();
 		}
@@ -134,7 +134,7 @@ public class MenuServiceImpl extends DbConnection implements MenuService {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			ResponseEntity.setException(e.getMessage());
+			ResponseEntity.setMessage(e.getMessage());
 		} finally {
 			this.conn.close();
 		}

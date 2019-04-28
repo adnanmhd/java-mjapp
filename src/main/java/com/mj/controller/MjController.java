@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mj.entity.MenuEntity;
+import com.mj.entity.PenjualanEntity;
 import com.mj.entity.ResponseMenuEntity;
 import com.mj.service.MenuService;
+import com.mj.service.PenjualanService;
 
 @RestController
 public class MjController {
@@ -29,6 +31,9 @@ public class MjController {
 
 	@Autowired
 	private MenuService service;
+	
+	@Autowired
+	private PenjualanService servicePenjualan;
 
 	@RequestMapping(value = "/getMenu/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> getMenu(@PathVariable("id") Integer id) {
@@ -88,6 +93,19 @@ public class MjController {
 			hasil.replace("message", e.getMessage());
 			hasil.replace("status", false);
 			return new ResponseEntity<Map<String, Object>>(hasil, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@RequestMapping(value = "/addItemJual", method = RequestMethod.POST)
+	public ResponseEntity<PenjualanEntity> addItemJual(@RequestBody PenjualanEntity entity) {
+		
+		try {
+			entity = servicePenjualan.addItemJual(entity); 
+			return new ResponseEntity<PenjualanEntity>(entity, HttpStatus.OK);
+		} catch (Exception e) {
+			entity.setMessage(e.getMessage());
+			entity.setStatus(false);
+			return new ResponseEntity<PenjualanEntity>(entity, HttpStatus.BAD_REQUEST);
 		}
 	}
 }

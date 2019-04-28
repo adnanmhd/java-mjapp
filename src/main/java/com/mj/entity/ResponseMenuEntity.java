@@ -11,9 +11,7 @@ public class ResponseMenuEntity implements Serializable {
 	
 	private Boolean status;
 	
-	private String message;
-	
-	private String exception;
+	private String message;		
 
 	public List<MenuEntity> getData() {
 		return data;
@@ -39,13 +37,5 @@ public class ResponseMenuEntity implements Serializable {
 		this.message = message;
 	}
 
-	public String getException() {
-		return exception;
-	}
-
-	public void setException(String exception) {
-		this.exception = exception;
-	}
-	
 
 }

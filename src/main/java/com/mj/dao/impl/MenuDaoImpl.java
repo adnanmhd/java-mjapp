@@ -5,14 +5,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.jdbc.core.SqlTypeValue;
 import org.springframework.stereotype.Repository;
 
-import com.mj.constand.ConstandSql;
+import com.mj.constant.ConstantSql;
 import com.mj.dao.MenuDao;
 import com.mj.entity.MenuEntity;
+
+import ch.qos.logback.core.subst.Token.Type;
 
 @Repository
 public class MenuDaoImpl implements MenuDao {
@@ -51,7 +56,7 @@ public class MenuDaoImpl implements MenuDao {
 
 		try {
 
-			this.ps = this.conn.prepareStatement(ConstandSql.getAllMenu + query);
+			this.ps = this.conn.prepareStatement(ConstantSql.getAllMenu + query);
 			this.rs = this.ps.executeQuery();
 			while (this.rs.next()) {
 				MenuEntity dataMenu = new MenuEntity();
@@ -79,7 +84,7 @@ public class MenuDaoImpl implements MenuDao {
 		Boolean addMenu = false;
 		try {
 
-			this.ps = this.conn.prepareStatement(ConstandSql.insertMenu);			
+			this.ps = this.conn.prepareStatement(ConstantSql.insertMenu);			
 			this.ps.setString(1, entity.getKodeMenu());
 			this.ps.setString(2, entity.getNamaMenu());
 			this.ps.setInt(3, entity.getIdJenisMenu());
@@ -104,7 +109,7 @@ public class MenuDaoImpl implements MenuDao {
 		Boolean updateMenu = false;
 		try {
 
-			this.ps = this.conn.prepareStatement(ConstandSql.updateMenu);			
+			this.ps = this.conn.prepareStatement(ConstantSql.updateMenu);			
 			this.ps.setString(1, entity.getKodeMenu());
 			this.ps.setString(2, entity.getNamaMenu());
 			this.ps.setInt(3, entity.getIdJenisMenu());
@@ -130,7 +135,7 @@ public class MenuDaoImpl implements MenuDao {
 		Boolean deleteMenu = false;
 		try {
 
-			this.ps = this.conn.prepareStatement(ConstandSql.deleteMenu);						
+			this.ps = this.conn.prepareStatement(ConstantSql.deleteMenu);						
 			this.ps.setInt(1,  entity.getIdMenu());
 				
 			this.ps.executeUpdate();
@@ -145,5 +150,5 @@ public class MenuDaoImpl implements MenuDao {
 
 		return deleteMenu;
 	}
-
+		
 }
