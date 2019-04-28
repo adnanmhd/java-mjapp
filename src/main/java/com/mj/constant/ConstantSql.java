@@ -1,6 +1,6 @@
-package com.mj.constand;
+package com.mj.constant;
 
-public class ConstandSql {
+public class ConstantSql {
 
 	public static final String getAllMenu = "SELECT menu.id_menu,"
 			+ " menu.kode_menu, menu.nama_menu, menu.id_jenis_menu, "
@@ -16,4 +16,11 @@ public class ConstandSql {
 			+ "WHERE id_menu = ?";
 	
 	public static final String deleteMenu = "DELETE FROM menu WHERE id_menu = ?";
+	
+	public static final String getIdBill = "{CALL PROC_GET_SEQUENCE(?, ?)}";
+	
+	public static final String updateSequence = "UPDATE sequence SET sequence = sequence+1 WHERE id_sequence = ?";
+	
+	public static final String insertItemTerjual = "INSERT INTO item_terjual(id_bill, nama_menu, jenis_menu, harga, jumlah, total, create_date) " + 
+			"VALUES(?, ?, ?, ?, ?, ?, ?)";
 }
