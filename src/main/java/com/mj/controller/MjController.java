@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mj.entity.MenuEntity;
 import com.mj.entity.PenjualanEntity;
-import com.mj.entity.ResponseMenuEntity;
+import com.mj.entity.ResponseMJService;
 import com.mj.service.MenuService;
 import com.mj.service.PenjualanService;
 
@@ -38,13 +38,13 @@ public class MjController {
 	@RequestMapping(value = "/getMenu/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> getMenu(@PathVariable("id") Integer id) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<MenuEntity> hasil = new ArrayList<MenuEntity>();
+		List<MenuEntity> response = new ArrayList<MenuEntity>();
 
 		try {
 
-			hasil = service.getMenu(id);
+			hasil = service.getMenu(id); //id = id jenis menu, getMenu berdasarkan jenis menu
 			map.put("status", true);
-			map.put("data", hasil);
+			map.put("data", response);
 			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 		} catch (Exception e) {
 			map.put("status", false);
@@ -60,52 +60,69 @@ public class MjController {
 	}
 
 	@RequestMapping(value = "/addMenu", method = RequestMethod.POST)
-	public ResponseEntity<ResponseMenuEntity> addMenu(@RequestBody MenuEntity entity) {
-		ResponseMenuEntity hasil = new ResponseMenuEntity();
+	public ResponseEntity<ResponseMJService> addMenu(@RequestBody MenuEntity entity) {
+		
 		try {
-			hasil = service.addMenu(entity);
-			return new ResponseEntity<ResponseMenuEntity>(hasil, HttpStatus.OK);
-		} catch (Exception e) {
-			hasil.setMessage(e.getMessage());
-			return new ResponseEntity<ResponseMenuEntity>(hasil, HttpStatus.BAD_REQUEST);
+									
+			ResponseMJService response = new ResponseMJService(200, "data berhasil ditambahkan");
+			response.setData(service.addMenu(entity));
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.OK);
+		} catch (Exception e) {			
+			ResponseMJService response = new ResponseMJService(400, e.getMessage());
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@RequestMapping(value = "/updateMenu", method = RequestMethod.POST)
-	public ResponseEntity<ResponseMenuEntity> updateMenu(@RequestBody MenuEntity entity) {
-		ResponseMenuEntity hasil = new ResponseMenuEntity();
+	public ResponseEntity<ResponseMJService> updateMenu(@RequestBody MenuEntity entity) {
+		
 		try {
-			hasil = service.updateMenu(entity);
-			return new ResponseEntity<ResponseMenuEntity>(hasil, HttpStatus.OK);
+			boolean updateMenu = service.updateMenu(entity);
+			String messageStatus = "data gagal diperbarui";
+			if(updateMenu) {
+				messageStatus = "data berhasil diperbarui";
+			}
+			ResponseMJService response = new ResponseMJService(200, messageStatus);
+			response.setData(entity);			
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.OK);
 		} catch (Exception e) {
-			hasil.setMessage(e.getMessage());
-			return new ResponseEntity<ResponseMenuEntity>(hasil, HttpStatus.BAD_REQUEST);
+			ResponseMJService response = new ResponseMJService(400, e.getMessage());
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@RequestMapping(value = "/deleteMenu", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> deleteMenu(@RequestBody MenuEntity entity) {
-		Map<String, Object> hasil = new HashMap<String, Object>();
+	public ResponseEntity<ResponseMJService> deleteMenu(@RequestBody MenuEntity entity) {
+		
 		try {
-			hasil = service.deleteMenu(entity);
-			return new ResponseEntity<Map<String, Object>>(hasil, HttpStatus.OK);
+			boolean deleteMenu = service.deleteMenu(entity);
+			String messageStatus = "data gagal dihapus";
+			
+			if(deleteMenu) {
+				messageStatus = "data bershasil dihapus";
+			}
+			
+			ResponseMJService response = new ResponseMJService(200, messageStatus);
+			response.setData(entity);	
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.OK);
 		} catch (Exception e) {
-			hasil.replace("message", e.getMessage());
-			hasil.replace("status", false);
-			return new ResponseEntity<Map<String, Object>>(hasil, HttpStatus.BAD_REQUEST);
+			ResponseMJService response = new ResponseMJService(400, e.getMessage());
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@RequestMapping(value = "/addItemJual", method = RequestMethod.POST)
-	public ResponseEntity<PenjualanEntity> addItemJual(@RequestBody PenjualanEntity entity) {
+	public ResponseEntity<ResponseMJService> addItemJual(@RequestBody PenjualanEntity entity) {
 		
 		try {
-			entity = servicePenjualan.addItemJual(entity); 
-			return new ResponseEntity<PenjualanEntity>(entity, HttpStatus.OK);
-		} catch (Exception e) {
-			entity.setMessage(e.getMessage());
-			entity.setStatus(false);
-			return new ResponseEntity<PenjualanEntity>(entity, HttpStatus.BAD_REQUEST);
+			ResponseMJService response = new ResponseMJService(200, "data item penjualan berhasil ditambahkan");
+			response.setData(servicePenjualan.addItemJual(entity)); 
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.OK);
+		} catch (Exception e) {			
+			ResponseMJService response = new ResponseMJService(400, e.getMessage());
+			response.setData(entity);
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
+	
 }

@@ -58,19 +58,27 @@ public class PenjualanServiceImpl extends DbConnection implements PenjualanServi
 			dao.setConnection(conn);
 
 			entity.setIdBill(dao.getIdBill());
+			
+			boolean insert = false;
 
 			for (MenuJualEntity menuJual : entity.getData()) {
-				dao.insertItemTerjual(entity.getIdBill(), entity.getWaktuJual(), menuJual);
+				
+				insert = dao.insertItemTerjual(entity.getIdBill(), entity.getWaktuJual(), menuJual);
+				
+				if(!insert) {
+					break;
+				}
+			}
+			
+			if(insert) {
+				dao.increaseSequence();
+				this.conn.commit();		
+			} else {
+				throw new Exception("data penjualan gagal disimpan");
 			}
 
-			dao.increaseSequence();
-			this.conn.commit();		
-			entity.setMessage("item terjual berhasil disimpan");
-			entity.setStatus(true);
-
 		} catch (Exception e) {
-			entity.setMessage(e.getMessage());
-			entity.setStatus(false);
+			throw new Exception(e);
 
 		} finally {
 			this.conn.close();

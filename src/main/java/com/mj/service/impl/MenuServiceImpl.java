@@ -8,13 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mj.DbConnection;
 import com.mj.dao.MenuDao;
 import com.mj.entity.MenuEntity;
-import com.mj.entity.ResponseMenuEntity;
 import com.mj.service.MenuService;
 
 @Service
@@ -64,6 +62,7 @@ public class MenuServiceImpl extends DbConnection implements MenuService {
 			result = dao.getMenu(query);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			throw new Exception(e);
 		} finally {
 			this.conn.close();
 		}
@@ -71,15 +70,12 @@ public class MenuServiceImpl extends DbConnection implements MenuService {
 	}
 
 	@Override
-	public ResponseMenuEntity addMenu(MenuEntity entity) throws Exception {
-		ResponseMenuEntity ResponseEntity = new ResponseMenuEntity();
-		List<MenuEntity> menuEntity = new ArrayList<MenuEntity>();
-
+	public List<MenuEntity> addMenu(MenuEntity entity) throws Exception {
+		
+		List<MenuEntity> listData = new ArrayList<MenuEntity>();		
 		String query = "and menu.kode_menu = " + entity.getKodeMenu();
 		Boolean addMenu = false;
-		ResponseEntity.setMessage("insert data failed");
-		ResponseEntity.setStatus(addMenu);
-
+		
 		try {
 			this.conn = this.getConnection();
 			this.conn.setAutoCommit(false);
@@ -89,32 +85,22 @@ public class MenuServiceImpl extends DbConnection implements MenuService {
 
 			if (addMenu) {
 				this.conn.commit();
-				menuEntity = dao.getMenu(query);
-				ResponseEntity.setMessage("insert data success");
-				ResponseEntity.setStatus(addMenu);
-			}
-
-			ResponseEntity.setData(menuEntity);
+				listData = dao.getMenu(query);				
+			}			
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			ResponseEntity.setMessage(e.getMessage());
+			System.out.println("error here: " + e.getMessage());			
+			throw new Exception(e);
 		} finally {
 			this.conn.close();
 		}
-		return ResponseEntity;
+		return listData;
 	}
 
 	@Override
-	public ResponseMenuEntity updateMenu(MenuEntity entity) throws Exception {
-
-		ResponseMenuEntity ResponseEntity = new ResponseMenuEntity();
-		List<MenuEntity> menuEntity = new ArrayList<MenuEntity>();
-
-		String query = "and menu.kode_menu = " + entity.getKodeMenu();
-		Boolean updateMenu = false;
-		ResponseEntity.setMessage("update data failed");
-		ResponseEntity.setStatus(updateMenu);
+	public Boolean updateMenu(MenuEntity entity) throws Exception {
+		
+		Boolean updateMenu = false;		
 
 		try {
 			this.conn = this.getConnection();
@@ -124,29 +110,23 @@ public class MenuServiceImpl extends DbConnection implements MenuService {
 			updateMenu = dao.updateMenu(entity);
 
 			if (updateMenu) {
-				this.conn.commit();
-				menuEntity = dao.getMenu(query);
-				ResponseEntity.setMessage("update data success");
-				ResponseEntity.setStatus(updateMenu);
-			}
-
-			ResponseEntity.setData(menuEntity);
+				this.conn.commit();								
+			}			
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			ResponseEntity.setMessage(e.getMessage());
+			System.out.println(e.getMessage());		
+			throw new Exception(e);
 		} finally {
 			this.conn.close();
 		}
-		return ResponseEntity;
+		return updateMenu;
 	}
 
 	@Override
-	public Map<String, Object> deleteMenu(MenuEntity entity) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public Boolean deleteMenu(MenuEntity entity) throws Exception {
+		
 		Boolean deleteMenu = false;
-		map.put("status", deleteMenu);
-		map.put("message", "delete data failed");
+		
 		try {
 			this.conn = this.getConnection();
 			this.conn.setAutoCommit(false);
@@ -155,19 +135,17 @@ public class MenuServiceImpl extends DbConnection implements MenuService {
 			deleteMenu = dao.deleteMenu(entity);
 
 			if (deleteMenu) {
-				this.conn.commit();				
-				map.put("status", deleteMenu);
-				map.put("message", "delete data success");				
+				this.conn.commit();								
 			}
 			
 
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			map.put("exception", e.getMessage());
+		} catch (Exception e) {			
+			System.out.println(e.getMessage());		
+			throw new Exception(e);
 		} finally {
 			this.conn.close();
 		}
-		return map;
+		return deleteMenu;
 	}
 
 }
