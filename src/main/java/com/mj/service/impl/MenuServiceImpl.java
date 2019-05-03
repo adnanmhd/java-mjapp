@@ -3,9 +3,7 @@ package com.mj.service.impl;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,37 +68,41 @@ public class MenuServiceImpl extends DbConnection implements MenuService {
 	}
 
 	@Override
-	public List<MenuEntity> addMenu(MenuEntity entity) throws Exception {
+	public MenuEntity addMenu(MenuEntity entity) throws Exception {
 		
-		List<MenuEntity> listData = new ArrayList<MenuEntity>();		
-		String query = "and menu.kode_menu = " + entity.getKodeMenu();
 		Boolean addMenu = false;
-		
+		Boolean duplicate = true;
 		try {
 			this.conn = this.getConnection();
 			this.conn.setAutoCommit(false);
 			dao.setConnection(conn);
 
-			addMenu = dao.addMenu(entity);
+			duplicate = dao.checkDuplicate(entity.getKodeMenu());
+			if (duplicate) {
+				throw new Exception("terdapat duplikat data. Kode menu '" + entity.getKodeMenu() + "' sudah ada");
+			} else {
+				addMenu = dao.addMenu(entity);
 
-			if (addMenu) {
-				this.conn.commit();
-				listData = dao.getMenu(query);				
-			}			
+				if (addMenu) {
+					this.conn.commit();
+					entity = dao.getMenuByCode(entity);
+				}
+
+			}
 
 		} catch (Exception e) {
-			System.out.println("error here: " + e.getMessage());			
+			System.out.println(e.getMessage());
 			throw new Exception(e);
 		} finally {
 			this.conn.close();
 		}
-		return listData;
+		return entity;
 	}
 
 	@Override
 	public Boolean updateMenu(MenuEntity entity) throws Exception {
-		
-		Boolean updateMenu = false;		
+
+		Boolean updateMenu = false;
 
 		try {
 			this.conn = this.getConnection();
@@ -110,11 +112,11 @@ public class MenuServiceImpl extends DbConnection implements MenuService {
 			updateMenu = dao.updateMenu(entity);
 
 			if (updateMenu) {
-				this.conn.commit();								
-			}			
+				this.conn.commit();
+			}
 
 		} catch (Exception e) {
-			System.out.println(e.getMessage());		
+			System.out.println(e.getMessage());
 			throw new Exception(e);
 		} finally {
 			this.conn.close();
@@ -124,9 +126,9 @@ public class MenuServiceImpl extends DbConnection implements MenuService {
 
 	@Override
 	public Boolean deleteMenu(MenuEntity entity) throws Exception {
-		
+
 		Boolean deleteMenu = false;
-		
+
 		try {
 			this.conn = this.getConnection();
 			this.conn.setAutoCommit(false);
@@ -135,12 +137,11 @@ public class MenuServiceImpl extends DbConnection implements MenuService {
 			deleteMenu = dao.deleteMenu(entity);
 
 			if (deleteMenu) {
-				this.conn.commit();								
+				this.conn.commit();
 			}
-			
 
-		} catch (Exception e) {			
-			System.out.println(e.getMessage());		
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			throw new Exception(e);
 		} finally {
 			this.conn.close();

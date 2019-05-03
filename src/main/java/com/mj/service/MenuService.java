@@ -14,7 +14,7 @@ public interface MenuService {
 	
 	public List<MenuEntity> getMenu(int idJenisMenu) throws Exception;
 	
-	public List<MenuEntity> addMenu(MenuEntity entity) throws Exception;
+	public MenuEntity addMenu(MenuEntity entity) throws Exception;
 	
 	public Boolean updateMenu(MenuEntity entity) throws Exception;
 	

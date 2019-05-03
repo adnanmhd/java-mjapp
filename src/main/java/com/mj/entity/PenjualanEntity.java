@@ -1,7 +1,6 @@
 package com.mj.entity;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -11,13 +10,9 @@ public class PenjualanEntity implements Serializable {
 	
 	private String idBill;
 	
-	private List<MenuJualEntity> data;
-	
 	private Timestamp waktuJual;
 	
-	private Boolean status;
-	
-	private String message;			
+	private List<MenuJualEntity> data;			
 
 	public String getIdBill() {
 		return idBill;
@@ -42,22 +37,5 @@ public class PenjualanEntity implements Serializable {
 	public void setWaktuJual(Timestamp timeStamp) {
 		this.waktuJual = timeStamp;
 	}
-
-	public Boolean getStatus() {
-		return status;
-	}
-
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
 
 }

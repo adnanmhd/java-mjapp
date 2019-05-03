@@ -5,19 +5,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLType;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.jdbc.core.SqlTypeValue;
 import org.springframework.stereotype.Repository;
 
 import com.mj.constant.ConstantSql;
 import com.mj.dao.MenuDao;
 import com.mj.entity.MenuEntity;
-
-import ch.qos.logback.core.subst.Token.Type;
 
 @Repository
 public class MenuDaoImpl implements MenuDao {
@@ -78,6 +74,33 @@ public class MenuDaoImpl implements MenuDao {
 
 		return result;
 	}
+	
+	@Override
+	public MenuEntity getMenuByCode(MenuEntity dataMenu) throws Exception {		
+
+		try {
+
+			this.ps = this.conn.prepareStatement(ConstantSql.getMenuByCode);
+			this.ps.setString(1, dataMenu.getKodeMenu());
+			this.rs = this.ps.executeQuery();
+			while (this.rs.next()) {				
+				dataMenu.setIdMenu(this.rs.getInt("id_menu"));
+				dataMenu.setKodeMenu(this.rs.getString("kode_menu"));
+				dataMenu.setNamaMenu(this.rs.getString("nama_menu"));
+				dataMenu.setIdJenisMenu(this.rs.getInt("id_jenis_menu"));
+				dataMenu.setJenisMenu(this.rs.getString("jenis_menu"));
+				dataMenu.setHarga(this.rs.getLong("harga"));
+				dataMenu.setGambar(this.rs.getString("gambar"));				
+			}
+
+		} catch (Exception e) {
+			throw new Exception(e);
+		} finally {
+			closeStatement();
+		}
+
+		return dataMenu;
+	}
 
 	@Override
 	public Boolean addMenu(MenuEntity entity) throws Exception {
@@ -102,6 +125,34 @@ public class MenuDaoImpl implements MenuDao {
 		}
 
 		return addMenu;
+	}
+	
+	@Override
+	public Boolean checkDuplicate(String kode_menu) throws Exception {
+		Boolean duplicate = false;
+		Integer result = 0;
+		try {
+			this.cl = this.conn.prepareCall(ConstantSql.checkDuplicateKodeMenu);			
+			this.cl.setString(2, kode_menu);
+			this.cl.registerOutParameter(1, Types.INTEGER);
+			this.cl.execute();
+			
+			System.out.println("hasilnya ini: "+ cl.getInt(1));
+			
+			result = cl.getInt(1);
+			
+			if(result > 0) {
+				duplicate = true;
+			}else {
+				duplicate = false;
+			}
+			
+		} catch(Exception e) {
+			throw new Exception(e);
+		} finally {
+			closeStatement();
+		}
+		return duplicate;
 	}
 
 	@Override
@@ -149,6 +200,6 @@ public class MenuDaoImpl implements MenuDao {
 		}
 
 		return deleteMenu;
-	}
+	}	
 		
 }

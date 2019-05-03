@@ -8,8 +8,16 @@ public class ConstantSql {
 			+ "FROM menu, jenis_menu "
 			+ "WHERE menu.id_jenis_menu = jenis_menu.id_jenis_menu ";	
 	
+	public static final String getMenuByCode = "SELECT menu.id_menu,"
+			+ " menu.kode_menu, menu.nama_menu, menu.id_jenis_menu, "
+			+ "jenis_menu.jenis_menu, menu.harga, menu.gambar "
+			+ "FROM menu, jenis_menu "
+			+ "WHERE menu.id_jenis_menu = jenis_menu.id_jenis_menu and menu.kode_menu = LPAD(?, 5, 0)";	
+	
 	public static final String insertMenu = "INSERT INTO menu(kode_menu, nama_menu, id_jenis_menu, harga, gambar) "
-			+ "VALUES(?, ?, ?, ?, ?)";
+			+ "VALUES(LPAD(UPPER(?), 5, 0), UPPER(?), ?, ?, ?)";
+	
+	public static final String checkDuplicateKodeMenu = "{? = CALL FUNC_CHECK_DUPLICATE(?)}"; //return 0 or 1, if found duplicate, it returns 1. kode_menu as the parameter
 	
 	public static final String updateMenu = "UPDATE menu SET kode_menu = ?, "
 			+ "nama_menu = ?, id_jenis_menu = ?, harga = ?, gambar = ?"

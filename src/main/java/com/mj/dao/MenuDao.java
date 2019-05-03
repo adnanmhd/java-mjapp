@@ -12,7 +12,11 @@ public interface MenuDao {
 
 	public List<MenuEntity> getMenu(String query) throws Exception;
 	
+	public MenuEntity getMenuByCode(MenuEntity entity) throws Exception;
+	
 	public Boolean addMenu(MenuEntity entity) throws Exception;
+	
+	public Boolean checkDuplicate(String kode_menu) throws Exception;
 	
 	public Boolean updateMenu(MenuEntity entity) throws Exception;
 	

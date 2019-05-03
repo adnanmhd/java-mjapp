@@ -1,10 +1,5 @@
 package com.mj.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,27 +31,23 @@ public class MjController {
 	private PenjualanService servicePenjualan;
 
 	@RequestMapping(value = "/getMenu/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> getMenu(@PathVariable("id") Integer id) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<MenuEntity> response = new ArrayList<MenuEntity>();
-
+	public ResponseEntity<ResponseMJService> getMenu(@PathVariable("id") Integer id) {
+		
 		try {
-
-			hasil = service.getMenu(id); //id = id jenis menu, getMenu berdasarkan jenis menu
-			map.put("status", true);
-			map.put("data", response);
-			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+			ResponseMJService response = new ResponseMJService(200, "data menu");
+			
+			response.setData(service.getMenu(id)); //id = id jenis menu, getMenu berdasarkan jenis menu			
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.OK);
 		} catch (Exception e) {
-			map.put("status", false);
-			map.put("data", e.getMessage());
-			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.BAD_REQUEST);
+			ResponseMJService response = new ResponseMJService(400, e.getMessage());
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.BAD_REQUEST);
 		}
 
 	}
 
 	@RequestMapping(value = "/getAllMenu", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> getAllMenu() {
-		return this.getMenu(0);
+	public ResponseEntity<ResponseMJService> getAllMenu() {
+		return this.getMenu(0); //id 0 sebagai value untuk mendapatkan semua jenis menu
 	}
 
 	@RequestMapping(value = "/addMenu", method = RequestMethod.POST)
@@ -69,6 +60,7 @@ public class MjController {
 			return new ResponseEntity<ResponseMJService>(response, HttpStatus.OK);
 		} catch (Exception e) {			
 			ResponseMJService response = new ResponseMJService(400, e.getMessage());
+			response.setData(entity);
 			return new ResponseEntity<ResponseMJService>(response, HttpStatus.BAD_REQUEST);
 		}
 	}
