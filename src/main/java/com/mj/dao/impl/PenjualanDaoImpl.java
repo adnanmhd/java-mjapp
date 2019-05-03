@@ -8,6 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -112,6 +116,42 @@ public class PenjualanDaoImpl implements PenjualanDao {
 			closeStatement();
 		}
 		return insert;
+	}
+
+	@Override
+	public List<Map<String, Object>> getDataPenjualan(String dateRange1, String dateRange2) throws Exception {
+		
+		Map<String, Object> mapTotalPenjualan = new HashMap<String, Object>();		
+		List<Map<String, Object>> listData = new ArrayList<Map<String,Object>>();
+		long totalPenjualan = 0;
+		try {
+			
+			this.ps = this.conn.prepareStatement(ConstantSql.getDataPenjualan);
+			this.ps.setString(1, dateRange1);
+			this.ps.setString(2, dateRange2);
+			this.rs = this.ps.executeQuery();
+			
+			while(this.rs.next()){
+				Map<String, Object> mapData = new HashMap<String, Object>();
+				totalPenjualan += this.rs.getInt("total");
+				mapData.put("idBill", this.rs.getString("id_bill"));
+				mapData.put("jenisMenu", this.rs.getString("jenis_menu"));
+				mapData.put("namaMenu", this.rs.getString("nama_menu"));
+				mapData.put("harga", this.rs.getString("harga"));
+				mapData.put("jumlah", this.rs.getString("jumlah"));
+				mapData.put("total", this.rs.getInt("total"));
+				mapData.put("waktu", this.rs.getString("waktu"));				
+				listData.add(mapData);
+			}						
+			mapTotalPenjualan.put("totalPenjualan", totalPenjualan);
+			listData.add(mapTotalPenjualan);
+			
+		} catch(Exception e) {
+			throw new Exception(e);
+		} finally {
+			closeStatement();
+		}
+		return listData;
 	}
 
 }

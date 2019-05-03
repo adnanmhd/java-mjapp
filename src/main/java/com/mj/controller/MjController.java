@@ -117,4 +117,16 @@ public class MjController {
 		}
 	}
 	
+	@RequestMapping(value = "/getDataPenjualan/{range1}/{range2}", method = RequestMethod.GET)
+	public ResponseEntity<ResponseMJService> getDataPenjualan(@PathVariable("range1") String range1, @PathVariable("range2") String range2) {
+		
+		try {
+			ResponseMJService response = new ResponseMJService(200, "data penjualan");
+			response.setData(servicePenjualan.getDataPenjualan(range1, range2)); 
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.OK);
+		} catch (Exception e) {			
+			ResponseMJService response = new ResponseMJService(400, e.getMessage());			
+			return new ResponseEntity<ResponseMJService>(response, HttpStatus.BAD_REQUEST);
+		}
+	}
 }

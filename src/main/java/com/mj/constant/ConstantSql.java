@@ -19,8 +19,8 @@ public class ConstantSql {
 	
 	public static final String checkDuplicateKodeMenu = "{? = CALL FUNC_CHECK_DUPLICATE(?)}"; //return 0 or 1, if found duplicate, it returns 1. kode_menu as the parameter
 	
-	public static final String updateMenu = "UPDATE menu SET kode_menu = ?, "
-			+ "nama_menu = ?, id_jenis_menu = ?, harga = ?, gambar = ?"
+	public static final String updateMenu = "UPDATE menu SET kode_menu = LPAD(UPPER(?), 5, 0), "
+			+ "nama_menu = UPPER(?), id_jenis_menu = ?, harga = ?, gambar = ? "
 			+ "WHERE id_menu = ?";
 	
 	public static final String deleteMenu = "DELETE FROM menu WHERE id_menu = ?";
@@ -31,4 +31,9 @@ public class ConstantSql {
 	
 	public static final String insertItemTerjual = "INSERT INTO item_terjual(id_bill, nama_menu, jenis_menu, harga, jumlah, total, create_date) " + 
 			"VALUES(?, ?, ?, ?, ?, ?, ?)";
+	
+	public static final String getDataPenjualan = "SELECT id_bill, jenis_menu, nama_menu, harga, SUM(jumlah) as jumlah, SUM(total) as total, DATE_FORMAT(create_date, '%d-%m-%Y') as waktu" + 
+			" FROM item_terjual " + 
+			" WHERE DATE_FORMAT(create_date, '%Y-%m-%d') BETWEEN ? AND ?" + 
+			" GROUP BY nama_menu, harga ORDER BY jenis_menu";
 }

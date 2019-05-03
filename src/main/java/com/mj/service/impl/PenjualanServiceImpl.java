@@ -3,6 +3,10 @@ package com.mj.service.impl;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,6 +89,27 @@ public class PenjualanServiceImpl extends DbConnection implements PenjualanServi
 
 		}
 		return entity;
+	}
+
+	@Override
+	public List<Map<String, Object>> getDataPenjualan(String dateRange1, String dateRange2) throws Exception {
+		List<Map<String, Object>> listData = new ArrayList<Map<String,Object>>();
+		
+		try {
+			this.conn = this.getConnection();
+			this.conn.setAutoCommit(false);
+			dao.setConnection(conn);
+			
+			listData = dao.getDataPenjualan(dateRange1, dateRange2);
+			
+		} catch(Exception e) {
+			throw new Exception(e);
+
+		} finally {
+			this.conn.close();
+
+		}
+		return listData;
 	}
 
 }
