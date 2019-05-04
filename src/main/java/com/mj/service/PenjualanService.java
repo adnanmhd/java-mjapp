@@ -1,9 +1,8 @@
 package com.mj.service;
 import java.sql.Connection;
-import java.util.List;
-import java.util.Map;
 
 import com.mj.entity.PenjualanEntity;
+import com.mj.entity.ReportPenjualanEntity;
 
 public interface PenjualanService {
 	public void setConnection(Connection conn) throws Exception;
@@ -12,6 +11,6 @@ public interface PenjualanService {
 	
 	public PenjualanEntity addItemJual(PenjualanEntity entity) throws Exception;
 	
-	public List<Map<String, Object>> getDataPenjualan(String dateRange1, String dateRange2) throws Exception;
+	public ReportPenjualanEntity getDataPenjualan(String dateRange1, String dateRange2) throws Exception;
 
 }

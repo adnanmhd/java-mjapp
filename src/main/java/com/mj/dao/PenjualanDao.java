@@ -2,10 +2,9 @@ package com.mj.dao;
 
 import java.sql.Connection;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
 
 import com.mj.entity.MenuJualEntity;
+import com.mj.entity.ReportPenjualanEntity;
 
 public interface PenjualanDao {
 	public void setConnection(Connection conn) throws Exception;
@@ -18,5 +17,5 @@ public interface PenjualanDao {
 
 	public Boolean insertItemTerjual(String idBill, Timestamp waktuJual, MenuJualEntity entity) throws Exception;
 	
-	public List<Map<String, Object>> getDataPenjualan(String dateRange1, String dateRange2) throws Exception;
+	public ReportPenjualanEntity getDataPenjualan(String dateRange1, String dateRange2) throws Exception;
 }

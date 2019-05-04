@@ -32,7 +32,7 @@ public class ConstantSql {
 	public static final String insertItemTerjual = "INSERT INTO item_terjual(id_bill, nama_menu, jenis_menu, harga, jumlah, total, create_date) " + 
 			"VALUES(?, ?, ?, ?, ?, ?, ?)";
 	
-	public static final String getDataPenjualan = "SELECT id_bill, jenis_menu, nama_menu, harga, SUM(jumlah) as jumlah, SUM(total) as total, DATE_FORMAT(create_date, '%d-%m-%Y') as waktu" + 
+	public static final String getDataPenjualan = "SELECT id_bill, jenis_menu, nama_menu, harga, SUM(jumlah) as jumlah, SUM(total) as total, DATE_FORMAT(create_date, '%d-%m-%Y') as waktu_jual" + 
 			" FROM item_terjual " + 
 			" WHERE DATE_FORMAT(create_date, '%Y-%m-%d') BETWEEN ? AND ?" + 
 			" GROUP BY nama_menu, harga ORDER BY jenis_menu";

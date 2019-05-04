@@ -15,6 +15,7 @@ import com.mj.DbConnection;
 import com.mj.dao.PenjualanDao;
 import com.mj.entity.MenuJualEntity;
 import com.mj.entity.PenjualanEntity;
+import com.mj.entity.ReportPenjualanEntity;
 import com.mj.service.PenjualanService;
 
 @Service
@@ -92,15 +93,15 @@ public class PenjualanServiceImpl extends DbConnection implements PenjualanServi
 	}
 
 	@Override
-	public List<Map<String, Object>> getDataPenjualan(String dateRange1, String dateRange2) throws Exception {
-		List<Map<String, Object>> listData = new ArrayList<Map<String,Object>>();
+	public ReportPenjualanEntity getDataPenjualan(String dateRange1, String dateRange2) throws Exception {
+		ReportPenjualanEntity entity = new ReportPenjualanEntity();
 		
 		try {
 			this.conn = this.getConnection();
 			this.conn.setAutoCommit(false);
 			dao.setConnection(conn);
 			
-			listData = dao.getDataPenjualan(dateRange1, dateRange2);
+			entity = dao.getDataPenjualan(dateRange1, dateRange2);
 			
 		} catch(Exception e) {
 			throw new Exception(e);
@@ -109,7 +110,7 @@ public class PenjualanServiceImpl extends DbConnection implements PenjualanServi
 			this.conn.close();
 
 		}
-		return listData;
+		return entity;
 	}
 
 }
