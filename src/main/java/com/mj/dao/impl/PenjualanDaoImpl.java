@@ -16,7 +16,6 @@ import com.mj.constant.ConstantSql;
 import com.mj.dao.PenjualanDao;
 import com.mj.entity.MenuJualEntity;
 import com.mj.entity.ReportPenjualanEntity;
-import com.mj.entity.ReportPenjualanEntity.ReportPenjualan;
 
 @Repository
 public class PenjualanDaoImpl implements PenjualanDao {
